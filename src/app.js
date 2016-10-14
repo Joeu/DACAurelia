@@ -1,27 +1,41 @@
 import {inject} from "aurelia-framework";
 import {HttpClient, json} from 'aurelia-fetch-client';
 
-let httpClient = new HttpClient();
-
 var baseUrl = 'http://localhost:8080/bootwildfly';
 
 @inject(HttpClient)
 export class App {
 
-  constructor(){
+  constructor(http) {
     this.heading = "DACA - Dirlididi";
+    http.configure(config => {
+      config
+      .withBaseUrl(baseUrl)
+      .withDefaults({
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'Fetch'
+        }
+      });
+  });
+
+    this.http = http;
   }
 
+  configureRouter(config, router){
+    config.title = 'Dirlididi';
 
-  getStats(){
-    httpClient.fetch(baseUrl + '/stats')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        this.problems = data.Problems;
-        this.users = data.Users;
-        this.submissions = data.Submissions;
-      });
+    config.map([
+      { route: ['','daca'],  name: 'daca',
+        moduleId: './daca',  nav: true, title:'Daca' },
+      { route: 'problems',  name: 'problems',
+        moduleId: './problems',    nav: true, title:'Problems' },
+      { route: 'stats',  name: 'stats',
+        moduleId: './stats',    nav: true, title:'Stats' }
+    ]);
+
+    this.router = router;
   }
 
 }

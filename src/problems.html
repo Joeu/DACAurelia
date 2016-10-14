@@ -1,0 +1,11 @@
+<template>
+  <h1>${heading}</h1>
+
+  <p>Total: ${size}</p>
+  <li repeat.for="problem of problems">
+    <ul>- ${problem.description}</ul>
+  </li>
+
+  <button click.delegate = "getProblems()">Get Problems</button>
+
+</template>
